@@ -1,21 +1,49 @@
 <script>
 import service from "@/util/request.js"
-
+import moment from 'moment';
 export default {
   data() {
     return {
-      questions:{}
+      questions:{},
+      current: 1,
+      total: 10,
+      pageSize: 10,
+      pageSizeOptions: ['5', '10', '30', '40', '50'],
+
     };
   },
   methods:{
+    onShowSizeChange(current, pageSize) {
+      this.pageSize = pageSize;
+      this.getQuestions();
+    },
+    onChange(page, pageSize){
+      this.page = page;
+      this.pageSize = pageSize;
+      this.getQuestions();
+    },
+    getQuestions() {
+      service.get("/question/list", {
+        params: {
+          page: this.current,
+          size: this.pageSize
+        }
+      }).then((res) => {
+        // console.log(res)
+        this.questions = res.data
+        this.current = res.data.current
+        this.total = res.data.total
+        this.pageSize = res.data.size
+        console.log(res.data)
+      })
+    },
+    convertGMT(val){
+      return moment(val).format('YYYY-MM-DD HH:mm:ss')
+    }
 
   },
   mounted() {
-    // console.log(this.$route)
-    service.get("/getQuestions").then((res) => {
-      // console.log(res)
-      this.questions = res.data
-    })
+    this.getQuestions();
   }
 }
 
@@ -25,14 +53,15 @@ export default {
 <template>
 
   <div class="main">
+    {{this.convertGMT(1234)}}
     <a-row>
       <a-col :span="18">
         <h2><span><a-icon type="solution" /></span> 发现 </h2>
         <hr>
-        <a-list item-layout="horizontal" :data-source="this.questions.data">
+        <a-list item-layout="horizontal" :data-source="this.questions.records">
           <a-list-item slot="renderItem" slot-scope="item, index">
             <a-list-item-meta
-                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                :description='`${item.commentCount}个回复 • ${item.viewCount}次浏览 • ${convertGMT(item.gmtCreate)}`'
             >
               <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
               <a-avatar
@@ -44,6 +73,19 @@ export default {
         </a-list>
       </a-col>
     </a-row>
+    <a-pagination
+        v-model="current"
+        :page-size-options="pageSizeOptions"
+        :total="total"
+        show-size-changer
+        :page-size="pageSize"
+        @showSizeChange="onShowSizeChange"
+        @change="onChange"
+    >
+      <template slot="buildOptionText" slot-scope="props">
+        <span v-if="props.value !== '50'">{{ props.value }}条/页</span>
+      </template>
+    </a-pagination>
 
   </div>
 
