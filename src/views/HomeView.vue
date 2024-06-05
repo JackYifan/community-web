@@ -53,7 +53,6 @@ export default {
 <template>
 
   <div class="main">
-    {{this.convertGMT(1234)}}
     <a-row>
       <a-col :span="18">
         <h2><span><a-icon type="solution" /></span> 发现 </h2>
@@ -63,7 +62,8 @@ export default {
             <a-list-item-meta
                 :description='`${item.commentCount}个回复 • ${item.viewCount}次浏览 • ${convertGMT(item.gmtCreate)}`'
             >
-              <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
+<!--              <a slot="title" :href="`/question/${item.id}`">{{ item.title }}</a>-->
+              <router-link slot="title" :to="`/question/${item.id}`">{{ item.title }}</router-link>
               <a-avatar
                   slot="avatar"
                   :src="item.user.avatarUrl"
