@@ -20,6 +20,7 @@ export default {
       service.get(`/question/${id}`)
           .then((res) => {
             this.question = res.data
+            console.log(this.question)
           })
     },
     convertGMT(val){
@@ -45,9 +46,8 @@ export default {
               :subfield="false"
               defaultOpen="preview"
               :toolbarsFlag="false"
-              boxShadowStyle="0"
               previewBackground="#fff"
-              codeStyle="obsidian"
+              codeStyle="github"
               :xssOptions=false></mavon-editor>
         </div>
       </a-col>

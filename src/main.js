@@ -9,7 +9,9 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import VueCookies from 'vue-cookies'
 Vue.config.productionTip = false
+Vue.use(VueCookies)
 Vue.use(Antd);
 Vue.use(mavonEditor)
 new Vue({

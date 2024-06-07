@@ -1,8 +1,30 @@
 <script>
+import service from "@/util/request.js"
 export default {
   mounted() {
-    // console.log("mount")
-    // console.log(this.$store.state.isLogin)
+    this.getUserInfo()
+  },
+  methods:{
+    getUserInfo(){
+      service.get("/user/info")
+          .then((res) => {
+            if(res.data.code === 0){
+              this.$store.state.user = res.data.user
+              this.$store.state.isLogin = true
+            }
+          })
+    },
+    logout(){
+      service.get("/user/logout")
+          .then((res)=>{
+            if(res.data.code === 0){
+              this.$store.state.user = {}
+              this.$store.state.isLogin = false
+              this.$cookies.remove("token")
+              this.$router.go(0)
+            }
+          })
+    }
   }
 }
 
@@ -33,7 +55,7 @@ export default {
                 <li><a class="dropdown-item" href="#">我的问题</a></li>
                 <li><a class="dropdown-item" href="#">个人信息</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">退出登录</a></li>
+                <li><a class="dropdown-item" @click="logout">退出登录</a></li>
               </ul>
             </li>
 
@@ -44,7 +66,10 @@ export default {
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="https://github.com/login/oauth/authorize?client_id=541bf8d226524d44930a&redirect_uri=http://localhost:8887/callback&scope=user&state=1">Github登录</a></li>
-                <li><a class="dropdown-item" href="#">账号密码登录</a></li>
+                <li>
+<!--                  <router-link class="dropdown-item" to="/login"></router-link>-->
+                  <a class="dropdown-item" href="/login">账号密码登录</a>
+                </li>
               </ul>
             </li>
           </ul>

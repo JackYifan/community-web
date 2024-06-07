@@ -6,9 +6,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isLogin: false,
-    user: {
-      name: "wyf"
-    },
+    user: {},
+    // 登录modal是否可见
+    loginVisible: true,
+    // 注册modal是否可见
+    registerVisible: false,
   },
   getters: {
   },
